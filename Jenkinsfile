@@ -17,7 +17,7 @@ podTemplate(
             uname -a
             whoami
             pwd
-            ls -al'
+            ls -al
           """
         }
       }
