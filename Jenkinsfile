@@ -2,7 +2,7 @@ podTemplate(
   label: 'skaffold',
   cloud: 'kubernetes user20',
   containers: [
-    containerTemplate(name: 'skaffold-insider', image: 'registry.ndxlab.net/library/skaffold-docker:1.0-v0.34.0', ttyEnabled: true, command: 'cat')
+    containerTemplate(name: 'skaffold-insider', image: 'registry.ndxlab.net/library/skaffold-docker:1.0-v0.34.0', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
   ],
   volumes: [
     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
