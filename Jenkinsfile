@@ -26,7 +26,7 @@ podTemplate(
         container('skaffold-insider') {
           sh """
             docker login https://registry.ndxlab.net --username=$DOCKER_ID_USR --password=$DOCKER_ID_PSW
-            skaffold run
+            SKAFFOLD_DEFAULT_REPO=registry.ndxlab.net skaffold run
           """
         }
       }
