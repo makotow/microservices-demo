@@ -13,13 +13,15 @@ pipeline {
     }
     stages {
         stage('Envinronment info') {
-            container('skaffold-container') {
-                sh """
-                    uname -a
-                    whoami
-                    pwd
-                    skaffold version
-                """
+            steps {
+                container('skaffold-container') {
+                    sh """
+                        uname -a
+                        whoami
+                        pwd
+                        skaffold version
+                    """
+                }
             }
         }
 
@@ -31,10 +33,12 @@ pipeline {
             ]) {
                 steps {
                     git $GIT_URL
-                    sh """
-                    docker login $DOCKER_URL --username=$DOCKER_ID_USER --password=$DOCKER_ID_PASSWORD
-                    skaffold run 
-                """
+                    container('skaffold-container') {
+                        sh """
+                            docker login $DOCKER_URL --username=$DOCKER_ID_USER --password=$DOCKER_ID_PASSWORD
+                            skaffold run 
+                        """
+                    }
                 }
             }
         }
