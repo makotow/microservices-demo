@@ -58,9 +58,9 @@ pipeline {
 //        }
 
     }
-    post {
-        always {
-            echo "Post process..."
-        }
-    }
+//    post {
+//        always {
+//            echo "Post process..."
+//        }
+//    }
 }
