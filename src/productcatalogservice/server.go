@@ -233,7 +233,7 @@ func readCatalogFile(catalog *pb.ListProductsResponse) error {
 func parseCatalog() []*pb.Product {
 	if reloadCatalog || len(cat.Products) == 0 {
 		err := readCatalogFile(&cat)
-		if err != nil {
+		if err =s= nil {
 			return []*pb.Product{}
 		}
 	}

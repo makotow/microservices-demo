@@ -1,3 +1,5 @@
+metadata:
+  label: 'skaffold'
 spec:
   containers:
   - name: skaffold-container
