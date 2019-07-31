@@ -25,19 +25,22 @@ pipeline {
             }
         }
 
-        withCredentials([
-                usernamePassword(credentialsId: 'docker_id',
-                        usernameVariable: 'DOCKER_ID_USR',
-                        passwordVariable: 'DOCKER_ID_PASSWORD')
-        ]) {
-            stage('RUN: run skaffold') {
-                steps {
-                    git $GIT_URL
-                    container('skaffold-container') {
-                        sh """
-                            docker login $DOCKER_URL --username=$DOCKER_ID_USER --password=$DOCKER_ID_PASSWORD
-                            skaffold run 
-                        """
+
+        stage('RUN: run skaffold') {
+            steps {
+                script {
+                    withCredentials([
+                            usernamePassword(credentialsId: 'docker_id',
+                                    usernameVariable: 'DOCKER_ID_USR',
+                                    passwordVariable: 'DOCKER_ID_PASSWORD')
+                    ]) {
+                        git ${GIT_URL}
+                        container('skaffold-container') {
+                            sh """
+                                docker login ${DOCKER_URL} --username=${DOCKER_ID_USER} --password=${DOCKER_ID_PASSWORD}
+                                skaffold run 
+                            """
+                        }
                     }
                 }
             }
@@ -54,5 +57,10 @@ pipeline {
 //            }
 //        }
 
+    }
+    post {
+        always {
+            echo "Post process..."
+        }
     }
 }
