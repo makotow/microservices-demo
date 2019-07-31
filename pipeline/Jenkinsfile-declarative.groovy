@@ -25,12 +25,12 @@ pipeline {
             }
         }
 
-        stage('RUN: run skaffold') {
-            withCredentials([
+        withCredentials([
                 usernamePassword(credentialsId: 'docker_id',
                         usernameVariable: 'DOCKER_ID_USR',
                         passwordVariable: 'DOCKER_ID_PASSWORD')
-            ]) {
+        ]) {
+            stage('RUN: run skaffold') {
                 steps {
                     git $GIT_URL
                     container('skaffold-container') {
@@ -55,5 +55,4 @@ pipeline {
 //        }
 
     }
-
 }
