@@ -3,7 +3,7 @@ pipeline {
         kubernetes {
             cloud 'kubernetes'
             defaultContainer 'jnlp'
-            yamlFile 'SkaffoldContainer.yaml'
+            yamlFile './SkaffoldContainer.yaml'
         }
     }
     environment {
