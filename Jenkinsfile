@@ -1,6 +1,6 @@
 podTemplate(
   label: 'skaffold',
-  cloud: 'kubernetes user20',
+  cloud: 'kubernetes',
   containers: [
     containerTemplate(name: 'skaffold-insider', image: 'registry.ndxlab.net/library/skaffold-docker:1.0-v0.34.0', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
   ],
