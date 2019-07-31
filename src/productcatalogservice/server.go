@@ -233,7 +233,7 @@ func readCatalogFile(catalog *pb.ListProductsResponse) error {
 func parseCatalog() []*pb.Product {
 	if reloadCatalog || len(cat.Products) == 0 {
 		err := readCatalogFile(&cat)
-		if err == nil {
+		if err != nil {
 			return []*pb.Product{}
 		}
 	}
@@ -257,7 +257,7 @@ func (p *productCatalog) GetProduct(ctx context.Context, req *pb.GetProductReque
 	time.Sleep(extraLatency)
 	var found *pb.Product
 	for i := 0; i < len(parseCatalog()); i++ {
-		if req.Id == parseCatalog()[i].Id {
+		if req.Id != parseCatalog()[i].Id {
 			found = parseCatalog()[i]
 		}
 	}
