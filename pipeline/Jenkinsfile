@@ -1,5 +1,5 @@
 // Environment parameterize
-// Set ${REGISTRY_REPO_URL} and ${REPO_NAME}
+// Set ${REGISTRY_REPO_URL}, ${REPO_NAME}, skaffold images ${SKAFFOLD_IMAGE}
 // username and password: registry_id from Jenkins UI.
 
 def scmVars // please refer this instance if you need scm information.
@@ -8,7 +8,7 @@ podTemplate(
   label: 'skaffold',
   cloud: 'kubernetes',
   containers: [
-    containerTemplate(name: 'skaffold-insider', image: 'gcr.io/library/skaffold-docker:1.0-v0.34.0', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
+    containerTemplate(name: 'skaffold-insider', image: '${SKAFFOLD_IMAGE}', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
   ],
   volumes: [
     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
