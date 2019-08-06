@@ -1,15 +1,12 @@
 // Environment parameterize
-// SKAFFOLD_DEFAULT_REPO
-// cloud の指定
-// docker repo login
-// git url
-//
+
+def scmVars
 
 podTemplate(
   label: 'skaffold',
   cloud: 'kubernetes',
   containers: [
-    containerTemplate(name: 'skaffold-insider', image: 'registry.ndxlab.net/library/skaffold-docker:1.0-v0.34.0', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
+    containerTemplate(name: 'skaffold-insider', image: 'makotow/skaffold-docker:1.0-v0.34.0', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
   ],
   volumes: [
     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
@@ -17,7 +14,7 @@ podTemplate(
 ) {
   node('skaffold') {
     withCredentials([
-      usernamePassword(credentialsId: 'docker_id', usernameVariable: 'DOCKER_ID_USR', passwordVariable: 'DOCKER_ID_PSW')
+      usernamePassword(credentialsId: 'registry_id', usernameVariable: 'REGISTRY_ID_USER', passwordVariable: 'REGISTRY_ID_PASSWORD')
     ]) {
       stage('Info') {
         container('skaffold-insider') {
@@ -27,14 +24,25 @@ podTemplate(
             pwd
             ls -al
           """
+          echo "Verify environment variables."
+          echo "Container image registry url: ${REGISTRY_REPO_URL}"
+          echo "Container image path: ${REPO_NAME}"
         }
       }
-      stage('Test skaffold') {
-        git 'http://192.168.1.211/git/user10/msa-demo.git'
+      stage('Clone source code') {
+        scmVars = checkout scm
+        // scmVars contains the following values
+        // GIT_BRANCH=origin/mybranch
+        // GIT_COMMIT=fc8279a107ebaf806f2e310fce15a7a54238eb71
+        // GIT_PREVIOUS_COMMIT=6f2e319a1fc82707ebaf800fce15a7a54238eb71
+        // GIT_PREVIOUS_SUCCESSFUL_COMMIT=310fce159a1fc82707ebaf806f2ea7a54238eb71
+        // GIT_URL=https://stash.someworkplace.com/scm/poc/api-sample.git
+      }
+      stage('Run skaffold') {
         container('skaffold-insider') {
           sh """
-            docker login https://registry.ndxlab.net --username=$DOCKER_ID_USR --password=$DOCKER_ID_PSW
-            SKAFFOLD_DEFAULT_REPO=registry.ndxlab.net/user20 skaffold run
+            docker login https://${REGISTRY_REPO_URL} --username=${REGISTRY_ID_USER} --password=${REGISTRY_ID_PASSWORD}
+            skaffold run -d ${REGISTRY_REPO_URL}/${REPO_NAME}
           """
         }
       }
