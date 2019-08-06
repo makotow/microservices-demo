@@ -8,7 +8,7 @@ podTemplate(
   label: 'skaffold',
   cloud: 'kubernetes',
   containers: [
-    containerTemplate(name: 'skaffold-insider', image: 'gcr.io/hm-hands-on/library/skaffold-docker:1.0-v0.34.0', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
+    containerTemplate(name: 'skaffold-insider', image: 'makotow/skaffold-docker:1.0-v0.34.0', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
   ],
   volumes: [
     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
