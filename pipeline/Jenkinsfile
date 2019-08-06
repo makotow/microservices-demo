@@ -37,7 +37,7 @@ podTemplate(
         container('skaffold-insider') {
           sh """
             docker login https://${REGISTRY_REPO_URL} -u '${REGISTRY_ID_USER}' -p '${REGISTRY_ID_PASSWORD}'
-            skaffold run -d ${REGISTRY_REPO_URL}/${REPO_NAME}
+            skaffold run -d ${REGISTRY_REPO_URL}/${REPO_NAME} -n ${NAMESPACE}
           """
         }
       }
