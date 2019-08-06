@@ -1,12 +1,14 @@
 // Environment parameterize
+// Set ${REGISTRY_REPO_URL} and ${REPO_NAME}
+// username and password: registry_id from Jenkins UI.
 
-def scmVars
+def scmVars // please refer this instance if you need scm information.
 
 podTemplate(
   label: 'skaffold',
   cloud: 'kubernetes',
   containers: [
-    containerTemplate(name: 'skaffold-insider', image: 'makotow/skaffold-docker:1.0-v0.34.0', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
+    containerTemplate(name: 'skaffold-insider', image: 'gcr.io/library/skaffold-docker:1.0-v0.34.0', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
   ],
   volumes: [
     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
@@ -26,15 +28,11 @@ podTemplate(
           """
         }
       }
+      
       stage('Clone source code') {
         scmVars = checkout scm
-        // scmVars contains the following values
-        // GIT_BRANCH=origin/mybranch
-        // GIT_COMMIT=fc8279a107ebaf806f2e310fce15a7a54238eb71
-        // GIT_PREVIOUS_COMMIT=6f2e319a1fc82707ebaf800fce15a7a54238eb71
-        // GIT_PREVIOUS_SUCCESSFUL_COMMIT=310fce159a1fc82707ebaf806f2ea7a54238eb71
-        // GIT_URL=https://stash.someworkplace.com/scm/poc/api-sample.git
       }
+
       stage('Run skaffold') {
         container('skaffold-insider') {
           sh """
