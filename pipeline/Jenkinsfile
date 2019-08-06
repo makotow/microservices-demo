@@ -8,7 +8,7 @@ podTemplate(
   label: 'skaffold',
   cloud: 'kubernetes',
   containers: [
-    containerTemplate(name: 'skaffold-insider', image: '${SKAFFOLD_IMAGE}', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
+    containerTemplate(name: 'skaffold-insider', image: ${SKAFFOLD_IMAGE}, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
   ],
   volumes: [
     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
@@ -37,7 +37,7 @@ podTemplate(
         container('skaffold-insider') {
           sh """
             docker login https://${REGISTRY_REPO_URL} -u ${REGISTRY_ID_USER} -p ${REGISTRY_ID_PASSWORD}
-            skaffold run -d ${REGISTRY_REPO_URL}/${REPO_NAME}
+            skaffold run -d ${REGISTRY_REPO_URL}/${REPO_NAME} -n ${NAMESPACE}
           """
         }
       }
