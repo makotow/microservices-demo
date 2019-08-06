@@ -42,8 +42,12 @@ build:
     context: src/loadgenerator
   - image: adservice
     context: src/adservice
+  #tagPolicy:
+  #  gitCommit: {}
   tagPolicy:
-    gitCommit: {}
+    dateTime: 
+      format: "2006-01-02_15-04-05.999_MST"
+      timezone: "Local"
 deploy:
   kubectl:
     manifests:
