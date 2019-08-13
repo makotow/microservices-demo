@@ -48,8 +48,8 @@ pipeline {
                     ]) {
                         container('skaffold-container') {
                             sh """
-                                docker login https://${REGISTRY_REPO_URL} -u '${REGISTRY_ID_USER}' -p '${REGISTRY_ID_PASSWORD}'
-                                skaffold run -d ${REGISTRY_REPO_URL}/${REPO_NAME} -n ${NAMESPACE}
+                                docker login https://${params.REGISTRY_REPO_URL} -u '${REGISTRY_ID_USER}' -p '${REGISTRY_ID_PASSWORD}'
+                                skaffold run -d ${params.REGISTRY_REPO_URL}/${params.REPO_NAME} -n ${params.NAMESPACE}
                             """
                         }
                     }
