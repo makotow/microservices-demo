@@ -8,8 +8,7 @@ pipeline {
             yamlFile 'pipeline/skaffoldContainer.yaml'
         }
     }
-    environment {
-    }
+
 
     parameters {
         string(name: 'REGISTRY_REPO_URL', defaultValue: 'gcr.io/hm-hands-on', description: 'イメージレジストリ')
