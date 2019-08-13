@@ -9,10 +9,15 @@ pipeline {
         }
     }
     environment {
-        SKAFFOLD_DEFAULT_REPO = 'registry.ndxlab.net/user20'
-        GIT_URL = 'http://192.168.1.211/git/user10/msa-demo.git'
-        DOCKER_URL = 'https://registry.ndxlab.net'
     }
+
+    parameters {
+        string(name: 'REGISTRY_REPO_URL', defaultValue: 'gcr.io/hm-hands-on', description: 'イメージレジストリ')
+        string(name: 'REPO_NAME', defaultValue: 'user99', description: 'レジストリ名')
+        string(name: 'NAMESPACE', defaultValue: 'msa-demo', description: 'デプロイ先のネームスペース')
+    }
+
+
     stages {
         stage('Envinronment info') {
             steps {
@@ -28,19 +33,23 @@ pipeline {
         }
 
 
-        stage('RUN: run skaffold') {
+        stage('Clone source code') {
+            steps {
+                checkout scm
+            }
+        }
+
+
+        stage('RUN skaffold: Build image and deploy') {
             steps {
                 script {
                     withCredentials([
-                            usernamePassword(credentialsId: 'docker_id',
-                                    usernameVariable: 'DOCKER_ID_USR',
-                                    passwordVariable: 'DOCKER_ID_PASSWORD')
+                        usernamePassword(credentialsId: 'registry_id', usernameVariable: 'REGISTRY_ID_USER', passwordVariable: 'REGISTRY_ID_PASSWORD')
                     ]) {
-                        git ${GIT_URL}
                         container('skaffold-container') {
                             sh """
-                                docker login ${DOCKER_URL} --username=${DOCKER_ID_USER} --password=${DOCKER_ID_PASSWORD}
-                                skaffold run 
+                                docker login https://${REGISTRY_REPO_URL} -u '${REGISTRY_ID_USER}' -p '${REGISTRY_ID_PASSWORD}'
+                                skaffold run -d ${REGISTRY_REPO_URL}/${REPO_NAME} -n ${NAMESPACE}
                             """
                         }
                     }

@@ -18,6 +18,12 @@ podTemplate(
     withCredentials([
       usernamePassword(credentialsId: 'registry_id', usernameVariable: 'REGISTRY_ID_USER', passwordVariable: 'REGISTRY_ID_PASSWORD')
     ]) {
+    parameters {
+        string(name: 'REGISTRY_REPO_URL', defaultValue: 'gcr.io/hm-hands-on', description: 'イメージレジストリ')
+        string(name: 'REPO_NAME', defaultValue: 'user99', description: 'レジストリ名')
+        string(name: 'NAMESPACE', defaultValue: 'msa-demo', description: 'デプロイ先のネームスペース')
+    }
+
       stage('Info') {
         container('skaffold-insider') {
           sh """
