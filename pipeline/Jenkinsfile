@@ -26,12 +26,6 @@ pipeline {
 
     stages {
         stage('Validation & Envinronment info') {
-            when {
-                expression {
-                    return ${params.REPO_NAME} != '';
-                }
-            }
-
             steps {
                 container('skaffold-container') {
                     sh """
@@ -39,7 +33,6 @@ pipeline {
                         whoami
                         pwd
                         skaffold version
-                        echo ${params.REPO_NAME}
                     """
                 }
             }
@@ -51,22 +44,22 @@ pipeline {
             }
         }
 
-        stage('RUN skaffold: Build image and deploy') {
-            steps {
-                script {
-                    withCredentials([
-                        usernamePassword(credentialsId: 'registry_id', usernameVariable: 'REGISTRY_ID_USER', passwordVariable: 'REGISTRY_ID_PASSWORD')
-                    ]) {
-                        container('skaffold-container') {
-                            sh """
-                                docker login https://${params.REGISTRY_REPO_URL} -u '${REGISTRY_ID_USER}' -p '${REGISTRY_ID_PASSWORD}'
-                                skaffold run -d ${params.REGISTRY_REPO_URL}/${params.REPO_NAME} -n ${params.NAMESPACE}
-                            """
+            stage('RUN skaffold: Build image and deploy') {
+                steps {
+                    script {
+                        withCredentials([
+                            usernamePassword(credentialsId: 'registry_id', usernameVariable: 'REGISTRY_ID_USER', passwordVariable: 'REGISTRY_ID_PASSWORD')
+                        ]) {
+                            container('skaffold-container') {
+                                sh """
+                                    docker login https://${params.REGISTRY_REPO_URL} -u '${REGISTRY_ID_USER}' -p '${REGISTRY_ID_PASSWORD}'
+                                    skaffold run -d ${params.REGISTRY_REPO_URL}/${params.REPO_NAME} -n ${params.NAMESPACE}
+                                """
+                            }
                         }
                     }
                 }
             }
-        }
 
 //        stage('Deploy apps') {
 //            input {
